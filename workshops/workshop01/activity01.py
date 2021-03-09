@@ -7,7 +7,8 @@ e-mail: d.bueno.da.silva.10@student.scu.edu.au
 ID: 23567850
 """
 
-""" Tuples """
+
+""" Working with Tuples """
 
 ## Tuples
 simpleTuple = 0, 1
@@ -72,7 +73,10 @@ binarios, *_ = nestedTupleSample
 # counting elements. It should be a tuple as parameter
 print( seq.count( (1,2,3) )   )
 
-""" Operating with lists  """
+
+
+""" Working with LIST """
+
 
 # casting to a list
 aListExample = list(seq)
@@ -140,12 +144,127 @@ print("newList[:5] ( 0 to 5 ) ", newList[:5])
 
 # Finally, I undertood what :: does :)
 print("newList[::5] ( step plus 5 ) ", newList[::5])
-
 print("listOfTen reversed: ", listOfTen[::-1])
 
+## Iterating ( use enumerate function for non-iteration data types )
+for i, value in enumerate(newList ):
+   print("Item position ",i, " has values ", value)
+
+# building a dictionary with enumerate
+mapping = {}
+for i, value in enumerate(aListExample ):
+    mapping[value] = i 
+print(mapping)
+
+# sorted a list
+print(sorted(simpleStringIntoTuple))
+
+# zip - creating pair of tuples
+newZipped = zip(listOfTen, listOfTen[::-1]) # :)
+print("newZipped: ", list(newZipped))
+
+# determined by the shortest sequence => listOfTen[::2] 
+tripleZipped = zip( listOfTen, listOfTen[::-1], listOfTen[::2] )
+print("tripleZipped: ", list(tripleZipped))
+
+# zipping and unpacking simustaneosly
+for i, (a, b) in enumerate(zip(listOfTen, listOfTen[::-1] )):
+    print(" Position {0}: ( {1} , {2} )".format(i, a, b) )
+
+fullNames = [ ("Diego", "Bueno"), ("Ali", "Reza"), ("Vanessa", "Gomes") ]
+firstNames, lastNames = zip(*fullNames)
+print("firstNames: ", firstNames)
+print("lastNames: ", lastNames)
+
+# reversed
+print("by reversed function: ", list(reversed(listOfTen)) ) 
+print("by slicing [::-1]: ",listOfTen[::-1])
 
 
 
+""" Working with DICT """
+
+# Dict looks like a JSON, Hash map / associative arrays
+
+myDictionary = { "FirstName" : "Diego",
+                 "LastName" : "Bueno",
+                 "Age" : 37,
+                 "Rich?" : False
+                 }
+
+print(myDictionary)
+
+# easy to insert, it can be danger for messing up without perception
+myDictionary["Married"] = True
+myDictionary[0] = "Zero"
+myDictionary[False] = None
+myDictionary[True] = True
+print(myDictionary)
+
+# assigment
+myDictionary["Age"] = 37,0.5 # tuple
+print(myDictionary)
+
+if "Married" in myDictionary:
+    print("Please, check if married")
+    
+if "Salary" in myDictionary:
+    print("Please, check the salary")
+else:
+    print("Salary was not inputted")
+
+# removing values
+print( myDictionary.pop(True), "contend removed")
+print( myDictionary.pop(False), "contend removed")
+
+del myDictionary["Married"]
+
+print(myDictionary)
+
+print("\nmyDictionary attributes: ", myDictionary.keys() )
+print("\nmyDictionary contend: ", myDictionary.values() )
+
+# updating a dictionary
+### it also creates new attributes in case do not exists :) magic!
+myDictionary.update({ "Weight" : 68.5 , "Height" : 173, "Age" : 37})
+print(myDictionary)
+
+
+# get value
+print("Address: ",myDictionary.get("Address"))
+
+## getting values with default options
+print("Married: ",myDictionary.get("Married", "No"))
+print("Rich?: ",myDictionary.get("Rich?", "No"))
+
+# setting default
+myDictionary.setdefault("Address", "Somewhere")
+print("Address: ",myDictionary.get("Address"))
+
+print(myDictionary)
+### see also from collections import defaultdict
+
+#print(hash((1, 2, [2, 3]))) # TypeError: unhashable type: 'list'
+print(hash((1, 2, (2, 3)))) # Typles can be hashable 
+
+
+# Set ( dict with only keys ) Where Can I used it???
+mySet = set([1,2,3,4,5])
+print(type(mySet))
+print(mySet)
+
+
+# Comprehensions
+
+# list comprehensions
+pairs =  [ x for x in listOfTen if x % 2 == 0 ]
+print(type(pairs))
+print("Pair in listOfTen: ",pairs )
+
+# set comprehensions
+print("Odd in mySet: ", { x for x in mySet if x % 2 != 0 })
+
+# dict comprehension
 
 
 
