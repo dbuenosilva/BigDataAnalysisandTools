@@ -69,6 +69,101 @@ for a,b,c in seq:
 # unwanted variables ( _ by convention )
 binarios, *_ = nestedTupleSample
 
+# counting elements. It should be a tuple as parameter
+print( seq.count( (1,2,3) )   )
+
+""" Operating with lists  """
+
+# casting to a list
+aListExample = list(seq)
+print(aListExample) # list of tuples.
+aDeepList = list(aListExample[0])
+aDeepList[0] = 0
+print(aDeepList)
+
+# casting range to list
+rangeOfTen = range(10)
+print("rangeOfTen: ", rangeOfTen)
+listOfTen = list(rangeOfTen)
+print("listOfTen: ", listOfTen)
+
+# appending
+listOfTen.append(10)
+print("listOfTen got 11 elements: ", listOfTen)
+
+# inserting into a specific position
+listOfTen.insert(5,'weird no integer element in the list')
+print("listOfTen got 12 elements: ", listOfTen)
+
+# removing elements
+if 'weird no integer element in the list' in listOfTen:
+    listOfTen.remove('weird no integer element in the list')
+
+listOfTen.pop(10)
+
+print("listOfTen got back 10 elements: ", listOfTen )
+
+# concatenating list
+newList = listOfTen + aListExample
+print("newList: ", newList)
+
+# extend is faster and better performance than simple concatenating
+newList.extend(["extending the list", False, None, 4.5])
+print("extended newList: ", newList)
+
+# sorting
+listOfTen.sort()
+print("listOfTen sorted: ", listOfTen)
+
+# binary search and insert
+import bisect
+
+# finding the position
+position = bisect.bisect(listOfTen, 5.5)
+print(position)
+
+bisect.insort(listOfTen, 5.5)
+print("listOfTen sorted with 5.5 included: ", listOfTen)
+
+# Slicing
+print("newList[10:] ", newList[10:])
+print("newList[10:10] ", newList[10:11])
+print("newList[:10] ", newList[:10])
+
+newList[10:14] = [10,11,12,13] # loco
+print("newList ", newList)
+
+# negative indices
+print(newList[-5:-1])
+
+print("newList[:5] ( 0 to 5 ) ", newList[:5])
+
+# Finally, I undertood what :: does :)
+print("newList[::5] ( step plus 5 ) ", newList[::5])
+
+print("listOfTen reversed: ", listOfTen[::-1])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
