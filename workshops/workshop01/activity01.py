@@ -250,34 +250,79 @@ print(hash((1, 2, (2, 3)))) # Typles can be hashable
 
 # Set ( dict with only keys ) Where Can I used it???
 mySet = set([1,2,3,4,5])
-print(type(mySet))
 print(mySet)
 
 
-# Comprehensions
+"""  Comprehensions """
 
 # list comprehensions
 pairs =  [ x for x in listOfTen if x % 2 == 0 ]
-print(type(pairs))
 print("Pair in listOfTen: ",pairs )
 
 # set comprehensions
 print("Odd in mySet: ", { x for x in mySet if x % 2 != 0 })
 
 # dict comprehension
+DicValues = { index: field  for index, field in enumerate(myDictionary) if 1 == 1 }
+
+print("values in myDictionary: ", DicValues)
+
+# Nested list comprehensions
+listOfIntegers = [ [0,1,2,3,4,5] , [ 6, 7, 8, 9, 10 ] ] 
+pairsNumbers = [ x for x in listOfIntegers for x in x if x % 2 == 0  ]
+print("Pairs Numbers", pairsNumbers)
+
+print(tupleOfLists)
+flattened = [ x for lista in listOfIntegers for x in lista  ]
+print("flattened: ", flattened)
+
+
+"""  Functions """
+
+
+charToRemove = "[!@#$%ˆ&*()_+=\][{}|<>??/.,'˜`]"
+phrase = " #This is the$ )original string#$%&*) "
+
+
+import re
+def removeSpecialCharacteres( originalString, specialChars="[!@#$%ˆ&*()_+=\][{}|<>??/.,'˜`]"):
+    return re.sub(specialChars,'',originalString ).strip().title()
+print( removeSpecialCharacteres(phrase, charToRemove ) ) 
+
+
+# call function with map ( top )
+
+listOfPhrases = ["#This is the$ )primary string#$%&*)",
+                 "#This is the$ )second string#$%&*)",
+                 "#This is the$ )third string#$%&*)",
+                 "#This is the$ )fourth string#$%&*)",
+                 "#This is the$ )fifth string#$%&*)"]
+
+for x in map( removeSpecialCharacteres, listOfPhrases ):
+    print(x)
 
 
 
+# Anonymous / lambda functions
 
+def doSomeThing( listOfStrings, someFunction ):
+    return [someFunction(x) for x in listOfStrings ]
 
+print( doSomeThing(listOfPhrases, lambda x: x.upper()) )
+print( doSomeThing(listOfPhrases, lambda x: x.lower()) )
+print( doSomeThing(listOfPhrases, lambda x: removeSpecialCharacteres(x) ) )
+print( doSomeThing(listOfPhrases, lambda x: x + "\n" ) )
 
+# Generators
+def myGeneratorRootSqt( nValue ):
+    return( yield nValue ** 2 )
 
+print(myGeneratorRootSqt( 2 ))
 
+sqrOf2 = myGeneratorRootSqt( 2 ) # the function has not being executed yet
 
-
-
-
-
+for x in sqrOf2:
+    print(x) # generator executer here!
 
 
 
