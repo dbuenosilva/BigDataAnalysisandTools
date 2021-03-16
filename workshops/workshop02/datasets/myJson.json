@@ -1,0 +1,6 @@
+
+    [{"name": "Diogenes", "age": 41, "pets": null},
+    {"name": "Laila", "age": 39,"pets": ["Rex", "Lesse"]},
+    {"name": "Norram", "age": 36,"kids": ["Murilo", "Miguel"]
+    }] 
+    
