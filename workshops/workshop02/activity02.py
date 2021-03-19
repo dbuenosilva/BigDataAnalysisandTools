@@ -30,13 +30,12 @@ print("\nReading a CSV file with headers by read_csv and indexing first colunm b
 myDataFrame = pd.read_csv( path + 'stock_px_2.csv',index_col=1)
 print(myDataFrame)
 
-##myDataFrame = pd.read_csv( path + '/fec/P00000001-ALL.csv')
-##print(myDataFrame)
+myDataFrame = pd.read_csv( path + '/fec/P00000001-ALL.csv')
+print(myDataFrame)
 
 print("\nReading a CSV file indexing multiple colunms")
 print("Observed that index does not mean ordering, but it groups index contend hierarch")
-##myDataFrame = pd.read_csv( path + '/fec/P00000001-ALL.csv',index_col=['cmte_id','cand_id'])
-##print(myDataFrame)
+myDataFrame = pd.read_csv( path + '/fec/P00000001-ALL.csv',index_col=['cmte_id','cand_id'])#print(myDataFrame)
 
 print("\nReading a CSV file without delimitation")
 myDataFrame = pd.read_table( path + 'ex3.txt')
@@ -259,12 +258,167 @@ print(myDataFrame) # it does not work well when Json is deeper
 #conda install lxml
 #pip install beautifulsoup4 html5lib
 
+print("\nReading a HTML file with pandas")
+tablesDfFromHTML = pd.read_html( path + "fdic_failed_bank_list.html" )
+
+if len(tablesDfFromHTML) > 0:
+    print("\nLoaded ", len(tablesDfFromHTML), " table(s) from fdic_failed_bank_list.html file.\n")
+
+    print(tablesDfFromHTML[0].head())
+
+    close_data = pd.to_datetime(tablesDfFromHTML[0]['Closing Date'])
+
+    print("\nQuantity of closed banks per year:\nit looks that 2008 GFC provoked a huge problem in 2009 and 2010...\n")
+    print(close_data.dt.year.value_counts())
+
+
+print("\nParsing a XML file with lxml.objectify\n")
+
+from lxml import objectify 
+parsedXML = objectify.parse(open(path + "mta_perf/Performance_LIBUS.xml"))
+root =  parsedXML.getroot()
+
+myData = []
+skip_fields = ['PARENT_SEQ','INDICATOR_SEQ','DESIRED_CHANGE','DECIMAL_PLACES']
+
+for elt in root.INDICATOR: 
+    el_data = {}
+    for child in elt.getchildren(): 
+        if child.tag in skip_fields:
+            continue
+        el_data[child.tag] = child.pyval 
+    myData.append(el_data)
+    
+
+myDataFrame = pd.DataFrame(myData)
+
+print(myDataFrame.head())
+
+
+tag = '<a href="http://www.gwaya.com">Gwaya</a>'
+print("\nParsing ", tag," HTML contend with lxml.objectify")
+from io import StringIO
+
+root = objectify.parse(StringIO(tag)).getroot()
+
+print("\nroot.get('href'): ", root.get('href'))
+print("root.text: ", root.text)
+
+""" Binary Data Formats """
+
+print("Writing a pickle serialization")
+
+myDataFrame = pd.read_csv( path + 'csv_mindex.csv')
+print(myDataFrame)
+
+myDataFrame.to_pickle( path + 'pickle_mindex' )
+
+print("\nThe pickle file became 10x larger than csv :(\n" )
+print(pd.read_pickle( path + 'pickle_mindex' ))
+
+
+
+""" Using HDF5 Format """ 
+##  pip install tables
+
+print("\nInputting the dataframe 'myDataFrame' to HDF5 file  \n" )
+
+# Create the file
+myStoreHDF5 = pd.HDFStore(path + 'myData.h5')
+
+myStoreHDF5.put('myDataFrame', myDataFrame, format='table')
+
+print("\nRetrieving contend from myStoreHDF5 file")
+print(myStoreHDF5.select('myDataFrame'))
+
+print("\nInputting the pickle file 'pickle_mindex' to HDF5 store  \n" )
+myStoreHDF5.put('pickle_mindex', pd.read_pickle( path + 'pickle_mindex' ), format='table')
+
+print("\nRetrieving pickle_mindex contend from myStoreHDF5 store")
+print(myStoreHDF5.select('pickle_mindex'))
+
+
+
+""" Reading Microsoft Excel Files 
+
+print("\nReading specific spreadsheet of Excel file\n")
+myDataFrame = pd.read_excel( path + 'ex2.xlsx', 'Sheet1')
+
+print(myDataFrame)
+
+
+print("\nInputting a new sheet in spreadsheet of Excel file\n")
+writer = pd.ExcelWriter(path + 'ex2.xlsx')
+myDataFrame.to_excel(writer, 'Copy of Sheet1 by Python')
+writer.save()
+
+print(pd.read_excel( path + 'ex2.xlsx', 'Copy of Sheet1 by Python'))
+
+print("\nOPS! It replaced sheet1... ValueError: Append mode is not supported with xlsxwriter!")                                                                
+
+
+""" 
+
+
+""" Interacting with Web APIs """ 
+
+
+import requests
+print("\nRetriaving JSON from Web HTTP methods\n")
+
+url = 'https://api.github.com/repos/pandas-dev/pandas/issues'
+resp = requests.get(url)
+
+result = resp.json()
+
+print("It returned objet type ",type(result)) 
+
+print("\nConverting retrieved JSON to DataFrame")
+print(pd.DataFrame(result, columns=['number','title','labels','state']))
+
+
+
+
+""" Interacting with Relational Databases """
+
+import sqlite3
+
+print("\nCreating sqllite database\n")
+con = sqlite3.connect( path + 'mydata.sqlite')
+
+query = "drop table sales;"
+con.execute(query)
+
+query = """
+create table sales
+(product VARCHAR(20), qtd INTEGER, total REAL)
+;"""
+con.execute(query)
+con.commit()
+
+print("\nInserting myFile.csv into sqllite database\n")
+myCsv = csv.reader(open( path + 'myFile.csv'))
+
+aDados = []
+header = 0
+for line in myCsv:
+    if header > 0:
+        aDados.append((tuple(line)))
+    header+=1
+
+query = "insert into sales values (?, ?, ?) "
+con.executemany(query, aDados)
+con.commit()
+
+print("\nRetrieving sqllite data with sqlalchemy\n")
+
+#sqlalchemy
+import sqlalchemy as sqla
+db = sqla.create_engine('sqlite:///'+ path + 'mydata.sqlite')
+print(pd.read_sql('select * from sales', db))
 
 
 
 
 
-
-
-
-
+ 
